@@ -13,6 +13,17 @@ int numClientes = 0, cliente;
 char clientes[MAX_CLIENTES][5][100];
 float saldos[MAX_CLIENTES];
 
+struct Client {
+    char name[50];
+    char lastName{50];
+    char phone[50];
+    char cardNumber[50];
+    char nip[4];
+    float saldo;
+}
+
+struct Client clients[5];
+
 char msjRgsNombre[50] = "Ingrese el nombre del cliente (Solo nombre(s) ): ";
 char msjRgsApellido[36] = "Ingrese los apellidos del cliente: ";
 char msjRgsCelular[63] = "Ingrese el n%cmero celular del cliente (10 n%cmeros exactos): ";
