@@ -168,16 +168,14 @@ int vrfDtsCoincidan (char dtoUno[], int posDtoUno, char dtoDos[], int posDtoDos,
     return -1;
 }
 
-// int nombre = valor
-// [saldo ->]  [2341234]
-// [nombre ->]  [pinche andy]
-//  vrfDtsCoincidan ([sadfasdf], [2345234], [asasdfasd], [nombre ->], [saldo ->])
 int increaceClientBalance()
 {
     int clientIndex = findClientIndex();
 
     if (clientIndex == -1) {
-        // handle client not fount
+        printf("No se encontro un cliente con los datos ingresados.");
+        getchar();
+
         return -1;
     }
     showCurrentBalance(clientIndex);
@@ -188,13 +186,6 @@ int increaceClientBalance()
     float deposit;
     char input[100];
     int isNum, dot;
-
-    vrfExsCliente();
-    int excl = vrfExsCliente();
-    if (excl != 1)
-    {
-        break;
-    }
 
     while (1)
     {
