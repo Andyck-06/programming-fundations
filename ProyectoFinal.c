@@ -5,11 +5,11 @@
 
 #define mensajeContinuar "Informaci%cn guardada correctamente, presione ENTER para continuar. ", 162
 #define MAX_CLIENTES 10
-#define DATOS_SI_COINCIDEN = 1
-#define DATOS_NO_COINCIDEN = -1
-#define PHONE_INDEX = 1
-#define NIP_INDEX = 3
-#define NAME_INDEX = 0; 
+#define DATOS_SI_COINCIDEN 1
+#define DATOS_NO_COINCIDEN -1
+#define PHONE_INDEX 1
+#define NIP_INDEX 3
+#define NAME_INDEX 0
 
 char nombre[100] = "\0", nom[50] = "\0", ap[50] = "\0", celular[20] = "\0", numTarjeta[20] = "\0", nip[8] = "\0";
 char cnfCelular[20], cnfNip[8], cnfNombre[100], cnfTarjeta[25];
@@ -168,6 +168,51 @@ int vrfDtsCoincidan (char dtoUno[], int posDtoUno, char dtoDos[], int posDtoDos,
     return -1;
 }
 
+float requestAmountToSave(void) {
+    char inputAmount[100];
+    float deposit;
+    
+    printf("\nIngrese el monto a depositar: ");
+    fgets(inputAmount, sizeof(inputAmount), stdin);
+    rmvLinea(inputAmount);
+    
+    int isNum = 1;
+    int dot = 0;
+
+    for(int i = 0; inputAmount[i] != '\0';i++){
+        if (!isdigit(inputAmount[i])) {  
+            if (inputAmount[i] == '.' && !dot) {  
+                dot = 1;
+            } else {
+                isNum = 0; 
+                return -1;
+            }
+        }
+    }
+    
+    if(isNum) {
+        deposit = atof(inputAmount);
+
+        if(deposit <= 0) {
+            system("clear");
+            printf(msjOpcDos);
+            printf("El valor tiene que ser mayor a 0");
+            getchar();
+            system("clear");
+
+            return -1;
+        }
+    } else {
+        printf(msjErrRegistro);
+        getchar();
+        system("clear");
+        
+        return -1;
+    }
+    
+    return deposit;
+}
+
 int increaceClientBalance()
 {
     int clientIndex = findClientIndex();
@@ -179,38 +224,11 @@ int increaceClientBalance()
         return -1;
     }
     showCurrentBalance(clientIndex);
+
     float amountToAdd = requestAmountToSave();
+    
     addAmountToBalance(clientIndex, amountToAdd);
 
-
-    float deposit;
-    char input[100];
-    int isNum, dot;
-
-    while (1)
-    {
-        strcpy(celular, msjNum(celular, sizeof(celular), msjRgsCelular, msjErrRegistro, msjOpcDos, 10, 1));
-        strcpy(nip, msjNum(nip, sizeof(nip), msjRgsNip, msjErrRegistro, msjOpcDos, 4, 1));
-
-        int itMatch = vrfDtsCoincidan(celular, 1, nip, 3, nombre, &saldo, &cliente);
-
-        if (itMatch == DATOS_SI_COINCIDEN)
-        {
-            printf(msjOpcDos);
-            printf("Bienvenid@ %s\nTu saldo actual es: $%.2f\n", nombre, saldo);
-
-            break;
-        }
-        else
-        {
-            printf(msjOpcDos);
-            printf("\nLos datos ingresados no coinciden con ninguna cuenta");
-            getchar();
-            system("clear");
-
-            continue;
-        }
-    }
 }
 
 int findClientIndex() {
@@ -220,7 +238,7 @@ int findClientIndex() {
     strcpy(inputPhone, msjNum(inputPhone, sizeof(inputPhone), msjRgsCelular, msjErrRegistro, msjOpcDos, 10, 1));
     strcpy(inputNip, msjNum(inputNip, sizeof(inputNip), msjRgsNip, msjErrRegistro, msjOpcDos, 4, 1));
 
-   for (int i = 0; i < sizeof(clientes); i++) {
+    for (int i = 0; i < sizeof(clientes); i++) {
         if (strcmp(clientes[i][PHONE_INDEX], inputPhone) == 0 && strcmp(clientes[i][NIP_INDEX], inputNip) == 0) {
             return i;
         }
@@ -232,13 +250,9 @@ int findClientIndex() {
 void showCurrentBalance(int clientIndex) {
     float balance = saldos[clientIndex];
     char name[] = clientes[clientIndex][NAME_INDEX];
+    
     printf(msjOpcDos);
-    printf("Bienvenid@ %s\nTu saldo actual es: $%.2f\n", name, balance;
-}
-
-float requestAmountToSave() {
-    // request the amount to the user
-    return 0;
+    printf("Bienvenid@ %s\nTu saldo actual es: $%.2f\n", name, balance);
 }
 
 void addAmountToBalance(int clientIndex, float newAmount) {
