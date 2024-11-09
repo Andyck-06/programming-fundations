@@ -361,20 +361,20 @@ int main (){
 
             int itMatch = vrfDtsCoincidan(celular, 1, nip, 3, nombre, &saldo, &cliente);
 
-        if (itMatch == 1) {
-            printf(msjOpcTres);
-            printf("Bienvenid@ %s\n\nTu saldo actual es: $%.2f\n", nombre, saldo);
-            getchar();
+            if (itMatch == 1) {
+                printf(msjOpcTres);
+                printf("Bienvenid@ %s\n\nTu saldo actual es: $%.2f\n", nombre, saldo);
+                getchar();
 
-            break;
-        }else{
-            printf(msjOpcTres);
-            printf("\nLos datos ingresados no coinciden con ninguna cuenta.");
-            getchar();
-            system("clear");
+                break;
+            } else {
+                printf(msjOpcTres);
+                printf("\nLos datos ingresados no coinciden con ninguna cuenta.");
+                getchar();
+                system("clear");
 
-            continue;
-        }
+                continue;
+            }
         }
 
             break;
