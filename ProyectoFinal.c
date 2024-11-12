@@ -168,10 +168,37 @@ int vrfDtsCoincidan (char dtoUno[], int posDtoUno, char dtoDos[], int posDtoDos,
     return -1;
 }
 
+int findClientIndex() {
+    char inputPhone[20];
+    char inputNip[8];
+
+    strcpy(inputPhone, msjNum(inputPhone, sizeof(inputPhone), msjRgsCelular, msjErrRegistro, msjOpcDos, 10, 1));
+    strcpy(inputNip, msjNum(inputNip, sizeof(inputNip), msjRgsNip, msjErrRegistro, msjOpcDos, 4, 1));
+
+    for (int i = 0; i < sizeof(clientes); i++) {
+        if (strcmp(clientes[i][PHONE_INDEX], inputPhone) == 0 && strcmp(clientes[i][NIP_INDEX], inputNip) == 0) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void showCurrentBalance(int clientIndex) {
+    float balance = saldos[clientIndex];
+    char *name = clientes[clientIndex][NAME_INDEX];
+    
+    printf(msjOpcDos);
+    printf("Bienvenid@ %s\nTu saldo actual es: $%.2f\n", name, balance);
+    getchar();
+    system("clear");
+}
+
 float requestAmountToSave(void) {
     char inputAmount[100];
     float deposit;
     
+    printf(msjOpcDos);
     printf("\nIngrese el monto a depositar: ");
     fgets(inputAmount, sizeof(inputAmount), stdin);
     rmvLinea(inputAmount);
@@ -241,6 +268,11 @@ int checkAmountIsCorrect(float deposit){
     }
     
 }
+
+void addAmountToBalance(int clientIndex, float newAmount) {
+    saldos[clientIndex] += newAmount;
+}
+
 int increaceClientBalance()
 {
     int clientIndex = findClientIndex();
@@ -259,34 +291,9 @@ int increaceClientBalance()
     
     addAmountToBalance(clientIndex, amountToAdd);
 
-}
+    printf(mensajeContinuar);
+    getchar();
 
-int findClientIndex() {
-    char inputPhone[20];
-    char inputNip[8];
-
-    strcpy(inputPhone, msjNum(inputPhone, sizeof(inputPhone), msjRgsCelular, msjErrRegistro, msjOpcDos, 10, 1));
-    strcpy(inputNip, msjNum(inputNip, sizeof(inputNip), msjRgsNip, msjErrRegistro, msjOpcDos, 4, 1));
-
-    for (int i = 0; i < sizeof(clientes); i++) {
-        if (strcmp(clientes[i][PHONE_INDEX], inputPhone) == 0 && strcmp(clientes[i][NIP_INDEX], inputNip) == 0) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-void showCurrentBalance(int clientIndex) {
-    float balance = saldos[clientIndex];
-    char name = clientes[clientIndex][NAME_INDEX];
-    
-    printf(msjOpcDos);
-    printf("Bienvenid@ %s\nTu saldo actual es: $%.2f\n", name, balance);
-}
-
-void addAmountToBalance(int clientIndex, float newAmount) {
-    saldos[clientIndex] += newAmount;
 }
 
 int main (){
@@ -368,104 +375,23 @@ int main (){
             break;
 
         case 2:
-        float deposit;
-        char input[100];
-        int isNum, dot;
-
-        vrfExsCliente();
-        int excl = vrfExsCliente();
-        if(excl != 1){
-            break;
-        }
 
         while(1){
-		strcpy(celular, msjNum(celular, sizeof(celular), msjRgsCelular, msjErrRegistro, msjOpcDos, 10, 1));
-        strcpy(nip, msjNum(nip, sizeof(nip), msjRgsNip, msjErrRegistro, msjOpcDos, 4, 1));
 
-        int itMatch = vrfDtsCoincidan(celular, 1, nip, 3, nombre, &saldo, &cliente);
+            int check = increaceClientBalance();
 
-        if (itMatch == 1) {
-            printf(msjOpcDos);
-            printf("Bienvenid@ %s\nTu saldo actual es: $%.2f\n", nombre, saldo);
-            
-            break;
-            }else{
-            printf(msjOpcDos);
-            printf("\nLos datos ingresados no coinciden con ninguna cuenta");
-            getchar();
-            system("clear");
-
-            continue;
-            }
-        }
-
-        while(1){
-            printf("\nIngrese el monto a depositar: ");
-                fgets(input, sizeof(input), stdin);
-                rmvLinea(input);
-
-                isNum = 1;
-                dot = 0;
-
-            for(int i = 0; input[i] != '\0';i++){
-                if (!isdigit(input[i])) {  
-                    if (input[i] == '.' && !dot) {  
-                        dot = 1;
-                    } else {
-                        isNum = 0; 
-                        break;
-                    }
-                }
-            }
-            if(isNum){
-                    deposit = atof(input);
-
-                    if(deposit <= 0){
-                        system("clear");
-                        printf(msjOpcDos);
-                        printf("El valor tiene que ser mayor a 0");
-                        getchar();
-                        system("clear");
-
-                        continue;
-                    }
-                }else{
-                    printf(msjErrRegistro);
-                    getchar();
-                    system("clear");
-                    continue;
-                }
-            printf("\nEsta seguro que desea depositar $%.2f?  (s/n): ", deposit);
-            scanf(" %c", &check);
-            system("clear");
-
-            if(check == 's' || check == 'S'){
-                printf(msjOpcDos);
-                printf("\nSu deposito fue realizado con exito.\n\nMonto depositado: $%.2f\n\nDepositado en la tarjeta: %s\n\n",deposit,numTarjeta );
-                getchar();
-
-                break;
-            }else{
-                printf(msjOpcDos);
-                printf("Deposito cancelado.\n");
-                getchar();
-                system("clear");
-
+            if(check == -1) {
                 continue;
+            } else {
+                break;
             }
         }
-
-        saldo += deposit;
-        saldos[cliente] =  saldo;
-
-        printf(mensajeContinuar);
-        getchar();
             break;
 
         case 3:
 
         vrfExsCliente();
-        excl = vrfExsCliente();
+        int excl = vrfExsCliente();
         if(excl != 1){
             break;
         }
