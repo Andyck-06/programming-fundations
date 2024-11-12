@@ -198,50 +198,52 @@ float requestAmountToSave(void) {
     char inputAmount[100];
     float deposit;
     
-    printf(msjOpcDos);
-    printf("\nIngrese el monto a depositar: ");
-    fgets(inputAmount, sizeof(inputAmount), stdin);
-    rmvLinea(inputAmount);
+    while(1) {
+        printf(msjOpcDos);
+        printf("\nIngrese el monto a depositar: ");
+        fgets(inputAmount, sizeof(inputAmount), stdin);
+        rmvLinea(inputAmount);
     
-    int isNum = 1;
-    int dot = 0;
+        int isNum = 1;
+        int dot = 0;
 
-    for(int i = 0; inputAmount[i] != '\0';i++){
-        if (!isdigit(inputAmount[i])) {  
-            if (inputAmount[i] == '.' && !dot) {  
-                dot = 1;
-            } else {
-                isNum = 0; 
-                return -1;
+        for(int i = 0; inputAmount[i] != '\0';i++){
+            if (!isdigit(inputAmount[i])) {  
+                if (inputAmount[i] == '.' && !dot) {  
+                    dot = 1;
+                } else {
+                    isNum = 0; 
+                    break;
+                }
             }
         }
-    }
     
-    if(isNum) {
-        deposit = atof(inputAmount);
+        if(isNum) {
+            deposit = atof(inputAmount);
 
-        if(deposit <= 0) {
-            system("clear");
-            printf(msjOpcDos);
-            printf("El valor tiene que ser mayor a 0");
+            if(deposit <= 0) {
+                system("clear");
+                printf(msjOpcDos);
+                printf("El valor tiene que ser mayor a 0");
+                getchar();
+                system("clear");
+
+                continue;
+            }
+        } else {
+            printf(msjErrRegistro);
             getchar();
             system("clear");
-
-            return -1;
-        }
-    } else {
-        printf(msjErrRegistro);
-        getchar();
-        system("clear");
         
-        return -1;
+            continue;
+        }
+        break;
     }
     
     return deposit;
 }
 
 int checkAmountIsCorrect(float deposit){
-
     char check;
 
     while(1){
@@ -254,19 +256,11 @@ int checkAmountIsCorrect(float deposit){
             printf("\nSu deposito fue realizado con exito.\n\nMonto depositado: $%.2f\n\nDepositado en la tarjeta: %s\n\n",deposit,numTarjeta );
             getchar();
 
-            return 1;
             break;
         } else {
-            printf(msjOpcDos);
-            printf("Deposito cancelado.\n");
-            getchar();
-            system("clear");
-
             return -1;
-            break;
         }
     }
-    
 }
 
 void addAmountToBalance(int clientIndex, float newAmount) {
@@ -275,6 +269,7 @@ void addAmountToBalance(int clientIndex, float newAmount) {
 
 int increaceClientBalance()
 {
+    float amountToAdd;
     int clientIndex = findClientIndex();
 
     if (clientIndex == -1) {
@@ -285,9 +280,22 @@ int increaceClientBalance()
     }
     showCurrentBalance(clientIndex);
 
-    float amountToAdd = requestAmountToSave();
+    while(1){
+        amountToAdd = requestAmountToSave();
 
-    checkAmountIsCorrect(amountToAdd);
+        int cancelledDeposit = checkAmountIsCorrect(amountToAdd);
+
+        if(cancelledDeposit == -1){
+            printf(msjOpcDos);
+            printf("Deposito cancelado.\n");
+            getchar();
+            system("clear");
+
+            return 1;
+        } else {
+            break;
+        }
+    }
     
     addAmountToBalance(clientIndex, amountToAdd);
 
@@ -377,7 +385,6 @@ int main (){
         case 2:
 
         while(1){
-
             int check = increaceClientBalance();
 
             if(check == -1) {
