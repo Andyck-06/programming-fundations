@@ -213,6 +213,34 @@ float requestAmountToSave(void) {
     return deposit;
 }
 
+int checkAmountIsCorrect(float deposit){
+
+    char check;
+
+    while(1){
+        printf("\nEsta seguro que desea depositar $%.2f?  (s/n): ", deposit);
+        scanf(" %c", &check);
+        system("clear");
+
+        if(check == 's' || check == 'S'){
+            printf(msjOpcDos);
+            printf("\nSu deposito fue realizado con exito.\n\nMonto depositado: $%.2f\n\nDepositado en la tarjeta: %s\n\n",deposit,numTarjeta );
+            getchar();
+
+            return 1;
+            break;
+        } else {
+            printf(msjOpcDos);
+            printf("Deposito cancelado.\n");
+            getchar();
+            system("clear");
+
+            return -1;
+            break;
+        }
+    }
+    
+}
 int increaceClientBalance()
 {
     int clientIndex = findClientIndex();
@@ -226,6 +254,8 @@ int increaceClientBalance()
     showCurrentBalance(clientIndex);
 
     float amountToAdd = requestAmountToSave();
+
+    checkAmountIsCorrect(amountToAdd);
     
     addAmountToBalance(clientIndex, amountToAdd);
 
@@ -249,7 +279,7 @@ int findClientIndex() {
 
 void showCurrentBalance(int clientIndex) {
     float balance = saldos[clientIndex];
-    char name[] = clientes[clientIndex][NAME_INDEX];
+    char name = clientes[clientIndex][NAME_INDEX];
     
     printf(msjOpcDos);
     printf("Bienvenid@ %s\nTu saldo actual es: $%.2f\n", name, balance);
