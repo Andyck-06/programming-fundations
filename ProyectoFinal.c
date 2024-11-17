@@ -172,16 +172,17 @@ int findClientIndex() {
     char inputPhone[20];
     char inputNip[8];
 
-    strcpy(inputPhone, msjNum(inputPhone, sizeof(inputPhone), msjRgsCelular, msjErrRegistro, msjOpcDos, 10, 1));
-    strcpy(inputNip, msjNum(inputNip, sizeof(inputNip), msjRgsNip, msjErrRegistro, msjOpcDos, 4, 1));
+    while (1) {
+        strcpy(inputPhone, msjNum(inputPhone, sizeof(inputPhone), msjRgsCelular, msjErrRegistro, msjOpcDos, 10, 1));
+        strcpy(inputNip, msjNum(inputNip, sizeof(inputNip), msjRgsNip, msjErrRegistro, msjOpcDos, 4, 1));
 
-    for (int i = 0; i < sizeof(clientes); i++) {
-        if (strcmp(clientes[i][PHONE_INDEX], inputPhone) == 0 && strcmp(clientes[i][NIP_INDEX], inputNip) == 0) {
-            return i;
+        for (int i = 0; i < numClientes; i++) {
+            if (strcmp(clientes[i][PHONE_INDEX], inputPhone) == 0 && strcmp(clientes[i][NIP_INDEX], inputNip) == 0) {
+                return i;
+            }
         }
+        printf("Los datos ingresados no coinciden con ninguna cuenta. Intente nuevamente.\n");
     }
-
-    return -1;
 }
 
 void showCurrentBalance(int clientIndex) {
@@ -199,45 +200,18 @@ float requestAmountToSave(void) {
     float deposit;
     
     while(1) {
-        printf(msjOpcDos);
         printf("\nIngrese el monto a depositar: ");
         fgets(inputAmount, sizeof(inputAmount), stdin);
         rmvLinea(inputAmount);
     
-        int isNum = 1;
-        int dot = 0;
+        char *endptr;    
+        deposit = strtof(inputAmount, &endptr);
 
-        for(int i = 0; inputAmount[i] != '\0';i++){
-            if (!isdigit(inputAmount[i])) {  
-                if (inputAmount[i] == '.' && !dot) {  
-                    dot = 1;
-                } else {
-                    isNum = 0; 
-                    break;
-                }
-            }
+        if (*endptr == '\0' && deposit > 0) {
+            break;
         }
-    
-        if(isNum) {
-            deposit = atof(inputAmount);
 
-            if(deposit <= 0) {
-                system("clear");
-                printf(msjOpcDos);
-                printf("El valor tiene que ser mayor a 0");
-                getchar();
-                system("clear");
-
-                continue;
-            }
-        } else {
-            printf(msjErrRegistro);
-            getchar();
-            system("clear");
-        
-            continue;
-        }
-        break;
+        printf("El monto ingresado no es válido. Por favor, intente nuevamente.\n");
     }
     
     return deposit;
@@ -246,19 +220,18 @@ float requestAmountToSave(void) {
 int checkAmountIsCorrect(float deposit){
     char check;
 
-    while(1){
-        printf("\nEsta seguro que desea depositar $%.2f?  (s/n): ", deposit);
+    while (1) {
+        printf("\n¿Está seguro que desea depositar $%.2f? (s/n): ", deposit);
         scanf(" %c", &check);
+        getchar();
         system("clear");
 
-        if(check == 's' || check == 'S'){
-            printf(msjOpcDos);
-            printf("\nSu deposito fue realizado con exito.\n\nMonto depositado: $%.2f\n\nDepositado en la tarjeta: %s\n\n",deposit,numTarjeta );
-            getchar();
-
-            break;
+        if (check == 's' || check == 'S') {
+            return 1; 
+        } else if (check == 'n' || check == 'N') {
+            return -1; 
         } else {
-            return -1;
+            printf("Opción inválida. Intente nuevamente.\n");
         }
     }
 }
@@ -267,41 +240,46 @@ void addAmountToBalance(int clientIndex, float newAmount) {
     saldos[clientIndex] += newAmount;
 }
 
-int increaceClientBalance()
+int increaseClientBalance()
 {
+    int clientIndex = -1;
     float amountToAdd;
-    int clientIndex = findClientIndex();
 
-    if (clientIndex == -1) {
-        printf("No se encontro un cliente con los datos ingresados.");
-        getchar();
-
-        return -1;
-    }
-    showCurrentBalance(clientIndex);
-
-    while(1){
-        amountToAdd = requestAmountToSave();
-
-        int cancelledDeposit = checkAmountIsCorrect(amountToAdd);
-
-        if(cancelledDeposit == -1){
-            printf(msjOpcDos);
-            printf("Deposito cancelado.\n");
+    // Solicitar celular y NIP hasta que sean correctos
+    while (clientIndex == -1) {
+        clientIndex = findClientIndex();
+        if (clientIndex == -1) {
+            printf("Datos incorrectos. Intente nuevamente.\n");
             getchar();
             system("clear");
-
-            return 1;
-        } else {
-            break;
         }
     }
-    
-    addAmountToBalance(clientIndex, amountToAdd);
 
-    printf(mensajeContinuar);
-    getchar();
+    // Mostrar nombre y apellidos
+    printf("Bienvenido %s\n", clientes[clientIndex][NAME_INDEX]);
 
+    // Solicitar monto y confirmar
+    while (1) {
+        amountToAdd = requestAmountToSave();
+        int confirmation = checkAmountIsCorrect(amountToAdd);
+
+        if (confirmation == -1) {
+            printf("Ingrese nuevamente el monto.\n");
+            continue;
+        }
+
+        // Realizar el depósito
+        addAmountToBalance(clientIndex, amountToAdd);
+
+        // Mensaje de éxito
+        printf("Depósito realizado con éxito.\n\nMonto depositado: $%.2f\n", amountToAdd);
+        printf("Depositado en la tarjeta: %s\n", clientes[clientIndex][2]);
+        getchar();
+        system("clear");
+
+        // Salir de la función tras completar el depósito
+        return 0;
+    }
 }
 
 int main (){
@@ -384,15 +362,8 @@ int main (){
 
         case 2:
 
-        while(1){
-            int check = increaceClientBalance();
-
-            if(check == -1) {
-                continue;
-            } else {
-                break;
-            }
-        }
+        increaseClientBalance();
+        
             break;
 
         case 3:
