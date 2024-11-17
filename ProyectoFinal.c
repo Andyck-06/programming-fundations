@@ -144,15 +144,13 @@ char* msjNum (char res[], int res_size, char mensaje[], char msjError[], char ms
 
 // función para verificar si existe un cliente registrado
 int vrfExsCliente (){
-    if(nombre[0] == '\0' && celular[0] == '\0' && numTarjeta[0] == '\0' && nip[0] == '\0'){
-        printf(msjErrClnInexistente, 173, 163);
-        getchar();
-
-        system("clear");
-        return -1;
-    } else {
-        return 1;
+    if (numClientes == 0) {
+        printf(msjErrClnInexistente, 173, 163);  
+        getchar(); 
+        system("clear"); 
+        return 0;  
     }
+    return 1;  
 }
 
 // función para verificar si el celular y el nip coinciden con el el cleinte registrado
@@ -172,15 +170,18 @@ int findClientIndex() {
     char inputPhone[20];
     char inputNip[8];
 
+    printf(msgOption);
+
     while (1) {
-        strcpy(inputPhone, msjNum(inputPhone, sizeof(inputPhone), msjRgsCelular, msjErrRegistro, msjOpcDos, 10, 1));
-        strcpy(inputNip, msjNum(inputNip, sizeof(inputNip), msjRgsNip, msjErrRegistro, msjOpcDos, 4, 1));
+        strcpy(inputPhone, msjNum(inputPhone, sizeof(inputPhone), msjDpsCelular, msjErrRegistro, "", 10, 0));
+        strcpy(inputNip, msjNum(inputNip, sizeof(inputNip), msjDpsNip, msjErrRegistro, "", 4, 0));
 
         for (int i = 0; i < numClientes; i++) {
             if (strcmp(clientes[i][PHONE_INDEX], inputPhone) == 0 && strcmp(clientes[i][NIP_INDEX], inputNip) == 0) {
                 return i;
             }
         }
+
         printf("Los datos ingresados no coinciden con ninguna cuenta. Intente nuevamente.\n");
     }
 }
@@ -189,8 +190,9 @@ void showCurrentBalance(int clientIndex) {
     float balance = saldos[clientIndex];
     char *name = clientes[clientIndex][NAME_INDEX];
     
-    printf(msjOpcDos);
-    printf("Bienvenid@ %s\nTu saldo actual es: $%.2f\n", name, balance);
+    printf("Bienvenid@ %s\n", name);
+    printf("Tu saldo actual es: $%.2f\n", balance);
+    printf("\nPresione ENTER para regresar al menú principal...");
     getchar();
     system("clear");
 }
@@ -245,20 +247,10 @@ int increaseClientBalance()
     int clientIndex = -1;
     float amountToAdd;
 
-    // Solicitar celular y NIP hasta que sean correctos
-    while (clientIndex == -1) {
-        clientIndex = findClientIndex();
-        if (clientIndex == -1) {
-            printf("Datos incorrectos. Intente nuevamente.\n");
-            getchar();
-            system("clear");
-        }
-    }
+    clientIndex = findClientIndex(msjOpcDos);
 
-    // Mostrar nombre y apellidos
     printf("Bienvenido %s\n", clientes[clientIndex][NAME_INDEX]);
 
-    // Solicitar monto y confirmar
     while (1) {
         amountToAdd = requestAmountToSave();
         int confirmation = checkAmountIsCorrect(amountToAdd);
@@ -268,18 +260,25 @@ int increaseClientBalance()
             continue;
         }
 
-        // Realizar el depósito
         addAmountToBalance(clientIndex, amountToAdd);
 
-        // Mensaje de éxito
         printf("Depósito realizado con éxito.\n\nMonto depositado: $%.2f\n", amountToAdd);
         printf("Depositado en la tarjeta: %s\n", clientes[clientIndex][2]);
         getchar();
         system("clear");
 
-        // Salir de la función tras completar el depósito
         return 0;
     }
+}
+
+int checkBalance(){
+    int clientIndex = -1;
+
+    clientIndex = findClientIndex(msjOpcTres);
+
+    showCurrentBalance(clientIndex);
+
+    return 0;
 }
 
 int main (){
@@ -297,6 +296,12 @@ int main (){
         scanf("%i", &op);
         getchar();
         system("clear");
+
+        if (op != 1) {  
+            if (!vrfExsCliente()) {
+                continue;  
+            }
+        }
 
         switch (op)
         {
@@ -363,38 +368,12 @@ int main (){
         case 2:
 
         increaseClientBalance();
-        
+
             break;
 
         case 3:
 
-        vrfExsCliente();
-        int excl = vrfExsCliente();
-        if(excl != 1){
-            break;
-        }
-
-        while(1){
-            strcpy(celular, msjNum(celular, sizeof(celular), msjRgsCelular, msjErrRegistro, msjOpcTres, 10, 1));
-            strcpy(nip, msjNum(nip, sizeof(nip), msjRgsNip, msjErrRegistro, msjOpcTres, 4, 1));
-
-            int itMatch = vrfDtsCoincidan(celular, 1, nip, 3, nombre, &saldo, &cliente);
-
-        if (itMatch == 1) {
-            printf(msjOpcTres);
-            printf("Bienvenid@ %s\n\nTu saldo actual es: $%.2f\n", nombre, saldo);
-            getchar();
-
-            break;
-        }else{
-            printf(msjOpcTres);
-            printf("\nLos datos ingresados no coinciden con ninguna cuenta.");
-            getchar();
-            system("clear");
-
-            continue;
-        }
-        }
+        checkBalance();
 
             break;
             
