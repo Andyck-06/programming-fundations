@@ -166,13 +166,12 @@ int vrfDtsCoincidan (char dtoUno[], int posDtoUno, char dtoDos[], int posDtoDos,
     return -1;
 }
 
-int findClientIndex() {
+int findClientIndex(char *msgOption) {
     char inputPhone[20];
     char inputNip[8];
 
-    printf(msgOption);
-
     while (1) {
+        printf(msgOption);
         strcpy(inputPhone, msjNum(inputPhone, sizeof(inputPhone), msjDpsCelular, msjErrRegistro, "", 10, 0));
         strcpy(inputNip, msjNum(inputNip, sizeof(inputNip), msjDpsNip, msjErrRegistro, "", 4, 0));
 
