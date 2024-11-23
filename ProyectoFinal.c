@@ -173,6 +173,8 @@ int findClientIndex(char *msgOption) {
     while (1) {
         printf(msgOption);
         strcpy(inputPhone, msjNum(inputPhone, sizeof(inputPhone), msjDpsCelular, msjErrRegistro, "", 10, 0));
+        system("clear");
+        printf(msgOption);
         strcpy(inputNip, msjNum(inputNip, sizeof(inputNip), msjDpsNip, msjErrRegistro, "", 4, 0));
 
         for (int i = 0; i < numClientes; i++) {
