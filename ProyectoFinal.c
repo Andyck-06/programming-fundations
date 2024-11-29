@@ -50,7 +50,7 @@ int vrfSloLetras(char string[], char msjError[])
         printf(msjError, 173, 162, 160);
         getchar();
 
-        system("cls");
+        system("clear");
         return -1;
     }
 
@@ -61,7 +61,7 @@ int vrfSloLetras(char string[], char msjError[])
             printf(msjError, 173, 162, 160);
             getchar();
 
-            system("cls");
+            system("clear");
             return -1;
             break;
         }
@@ -80,7 +80,7 @@ int vrfSloNumeros(char string[], char msjError[], int delimitador)
         printf(msjError, 173, 162);
         getchar();
 
-        system("cls");
+        system("clear");
         return -1;
     }
 
@@ -91,7 +91,7 @@ int vrfSloNumeros(char string[], char msjError[], int delimitador)
             printf(msjError, 173, 162);
             getchar();
 
-            system("cls");
+            system("clear");
             return -1;
             break;
         }
@@ -125,7 +125,7 @@ char *msjTxt(char res[], int resSize, char msjDato[], char msjError[], char msjO
 
         rmvLinea(res);
 
-        system("cls");
+        system("clear");
 
         if (vrfSloLetras(res, msjError) == 1)
         {
@@ -150,7 +150,7 @@ char *msjNum(char res[], int resSize, char msjDato[], char msjError[], char msjO
 
         rmvLinea(res);
 
-        system("cls");
+        system("clear");
 
         if (vrfSloNumeros(res, msjError, delimitador) == 1)
         {
@@ -167,7 +167,7 @@ int vrfExsCliente()
     {
         printf(msjErrClnInexistente, 173, 163);
         getchar();
-        system("cls");
+        system("clear");
         return 0;
     }
     return 1;
@@ -210,7 +210,7 @@ int findClientIndex(char msgOption[])
 
         printf("Los datos ingresados no coinciden con ninguna cuenta. Presione ENTER para reintentar.\n");
         getchar();
-        system("cls");
+        system("clear");
     }
 }
 
@@ -223,7 +223,7 @@ void showCurrentBalance(int clientIndex)
     printf("Tu saldo actual es: %c%.2f\n", 36, balance);
     printf("\nPresione ENTER para regresar al men%c principal.", 163);
     getchar();
-    system("cls");
+    system("clear");
 }
 
 float requestAmountToSave(void)
@@ -236,7 +236,7 @@ float requestAmountToSave(void)
         printf("Ingrese el monto a depositar: ");
         fgets(inputAmount, sizeof(inputAmount), stdin);
         rmvLinea(inputAmount);
-        system("cls");
+        system("clear");
 
         char *endptr;
         deposit = strtof(inputAmount, &endptr);
@@ -248,7 +248,7 @@ float requestAmountToSave(void)
 
         printf("El monto ingresado no es v%clido. Por favor, presione ENTER para reintentar.\n", 160);
         getchar();
-        system("cls");
+        system("clear");
         printf(msjOpcDos, 162, 162);
     }
 
@@ -265,7 +265,7 @@ int checkAmountIsCorrect(float deposit)
         printf("%cEst%c seguro que desea depositar %c%.2f%c (s/n): ", 168, 160, 36, deposit, 63);
         scanf(" %c", &check);
         getchar();
-        system("cls");
+        system("clear");
 
         if (check == 's' || check == 'S')
         {
@@ -307,7 +307,7 @@ int increaseClientBalance()
             printf(msjOpcDos, 162, 162);
             printf("%cDep%csito cancelado correctamente!, presione ENTER para reintentar.\n", 33, 162);
             getchar();
-            system("cls");
+            system("clear");
             printf(msjOpcDos, 162, 162);
             continue;
         }
@@ -319,7 +319,7 @@ int increaseClientBalance()
         printf("Depositado en la tarjeta: %s\n", clientes[clientIndex][CARD_INDEX]);
         printf("\nDep%csito realizado con %cxito, presiona ENTER para regresar al men%c principal. ", 162, 130, 163);
         getchar();
-        system("cls");
+        system("clear");
 
         return 0;
     }
@@ -346,13 +346,13 @@ int main()
     do
     {
 
-        system("cls");
+        system("clear");
         printf("Bienvenido al Sitema Bancario, por favor seleccione la opci%cn deseada: \n----------------------------------------------------------------------\n\n", 162);
 
         printf("1. Registrar a un nuevo cliente\n2. Depositar dinero a cuenta propia\n3. Verificar saldo en tarjeta\n4. Transferir dinero a otras cuentas\n5. Recargar tiempo aire\n6. Cambiar NIP\n7. Salir\n\n");
         scanf("%i", &op);
         getchar();
-        system("cls");
+        system("clear");
 
         if (op != 1 && op == 4)
         {
@@ -360,7 +360,7 @@ int main()
             {
                 printf(msjErrClnInexistente, 173, 163);
                 getchar();
-                system("cls");
+                system("clear");
                 continue;
             }
         }
@@ -406,7 +406,7 @@ int main()
 
             if (check != 's')
             {
-                system("cls");
+                system("clear");
                 printf("%cEl registro fue cancelado con %cxito!", 173, 130);
                 getchar();
 
@@ -432,7 +432,7 @@ int main()
 
             numClientes++;
 
-            system("cls");
+            system("clear");
 
             printf(mensajeContinuar);
             getchar();
@@ -473,7 +473,7 @@ int main()
             sldUno = saldo;
             clnUno = cliente;
 
-            system("cls");
+            system("clear");
             printf(msjOpcCuatro, 162, 162);
             printf("Cuenta de: %s.\nSaldo en la tarjeta de: %c%.2f pesos MXN\n\n", nombre, 36, saldo);
 
@@ -492,7 +492,7 @@ int main()
             while (t == 2)
             {
 
-                system("cls");
+                system("clear");
                 printf(msjOpcCuatro, 162, 162);
                 printf("Ingrese la cantidad de dinero a transferir (MXN): ");
                 fgets(transfe, sizeof(transfe), stdin);
@@ -508,7 +508,7 @@ int main()
 
                 if (transferencia <= 0)
                 {
-                    system("cls");
+                    system("clear");
                     printf(msjOpcCuatro, 162, 162);
                     printf("%cLa transferencia no puede ser negativa o 0!\nPresione ENTER para reintentar. ", 173);
                     getchar();
@@ -518,7 +518,7 @@ int main()
                 while (t == 1)
                 {
 
-                    system("cls");
+                    system("clear");
                     printf(msjOpcCuatro, 162, 162);
                     printf("Transferir a cuenta de: %s. Con tarjeta: %s\n\n", nombre, cnfTarjeta);
                     printf("Transferencia de: %c%.2f pesos MXN\n\n", 36, transferencia);
@@ -527,7 +527,7 @@ int main()
 
                     if (check != 's')
                     {
-                        system("cls");
+                        system("clear");
                         printf("%cLa transferencia fue cancelada con %cxito!", 173, 130);
                         transferencia = 0;
                         strcpy(transfe, "\0");
@@ -543,7 +543,7 @@ int main()
 
             if (sldUno <= 0 || sldUno < transferencia)
             {
-                system("cls");
+                system("clear");
                 printf(msjOpcCuatro, 162, 162);
                 printf("%cSaldo insuficiente para realizar la transferencia! presione ENTER para regresar al men%c ", 173, 163);
                 getchar();
@@ -556,7 +556,7 @@ int main()
                 saldos[clnDos] = sldDos + transferencia;
             }
 
-            system("cls");
+            system("clear");
             printf(msjOpcCuatro, 162, 162);
             printf("%cLa transferencia fue realizada con %cxito!\n\n", 173, 130);
             printf("Transferencia realizada a cuenta de: %s. Con tarjeta: %s\n\n", nombre, cnfTarjeta);
@@ -584,7 +584,7 @@ int main()
 
             while (t == 3)
             {
-                system("cls");
+                system("clear");
                 printf(msjOpcCinco, 162, 162);
                 printf("Cuenta de: %s.\nSaldo en la tarjeta de: %c%.2f pesos MXN\n\n", nombre, 36, saldo);
                 printf("Seleccione una compa%cia:\n1. AT&T\n2. Telcel\n3. Movistar\n", 164);
@@ -607,7 +607,7 @@ int main()
                 }
                 else
                 {
-                    system("cls");
+                    system("clear");
                     printf(msjOpcCinco, 162, 162);
                     printf("%cLa compa%cia es inexistente! presione ENTER para reintentar", 173, 164);
                     getchar();
@@ -618,7 +618,7 @@ int main()
             while (t == 2)
             {
 
-                system("cls");
+                system("clear");
                 printf(msjOpcCinco, 162, 162);
                 printf("Ingrese la cantidad de dinero a recargar (MXN): ");
                 fgets(recarg, sizeof(recarg), stdin);
@@ -634,7 +634,7 @@ int main()
 
                 if (recarga <= 0)
                 {
-                    system("cls");
+                    system("clear");
                     printf(msjOpcCinco, 162, 162);
                     printf("%cLa recarga no puede ser negativa o 0!\nPresione ENTER para reintentar. ", 173);
                     getchar();
@@ -644,7 +644,7 @@ int main()
                 while (t == 1)
                 {
 
-                    system("cls");
+                    system("clear");
                     printf(msjOpcCinco, 162, 162);
                     printf("Recargar a celular: %s. Con compa%cia: %s\n\n", cnfCelular, 164, compa);
                     printf("Recarga de: %c%.2f pesos MXN\n\n", 36, recarga);
@@ -653,7 +653,7 @@ int main()
 
                     if (check != 's')
                     {
-                        system("cls");
+                        system("clear");
                         printf(msjOpcCinco, 162, 162);
                         printf("%cLa recarga fue cancelada con %cxito!", 173, 130);
                         recarga = 0;
@@ -680,7 +680,7 @@ int main()
                 saldos[cliente] = saldo - recarga;
             }
 
-            system("cls");
+            system("clear");
             printf(msjOpcCinco, 162, 162);
             printf("%cLa recarga fue realizada con %cxito!\n\n", 173, 130);
             printf("Recargar a celular: %s. Con compa%cia: %s\n\n", cnfCelular, 164, compa);
@@ -704,7 +704,7 @@ int main()
                 printf("\nIngrese su nuevo NIP (4 n%cmeros exactos): ", 163);
                 fgets(nuevoNip, sizeof(nuevoNip), stdin);
                 rmvLinea(nuevoNip);
-                system("cls");
+                system("clear");
 
                 if (vrfSloNumeros(nuevoNip, msjErrRegistro, 4) == 1)
                 {
@@ -714,7 +714,7 @@ int main()
                     printf("%cEl nuevo NIP es correcto? (s/n): ", 168);
                     scanf(" %c", &confirmacion);
                     getchar();
-                    system("cls");
+                    system("clear");
 
                     if (tolower(confirmacion) == 's')
                     {
@@ -723,7 +723,7 @@ int main()
                             printf(msjOpcSeis, 162, 162);
                             printf("No se puede establecer un NIP igual al anterior, presione ENTER para reintentar.");
                             getchar();
-                            system("cls");
+                            system("clear");
                             continue;
                         }
                         else
@@ -732,7 +732,7 @@ int main()
                             printf(msjOpcSeis, 162, 162);
                             printf("NIP modificado exitosamente, presione ENTER para regresar al men%c principal.\n", 163);
                             getchar();
-                            system("cls");
+                            system("clear");
                             break;
                         }
                     }
@@ -742,7 +742,7 @@ int main()
                         printf(msjOpcSeis, 162, 162);
                         printf("Cambio cancelado con %cxito, presione ENTER para reintentar.\n", 130);
                         getchar();
-                        system("cls");
+                        system("clear");
                     }
                 }
             }
@@ -751,7 +751,7 @@ int main()
 
     } while (op < 7);
 
-    system("cls");
+    system("clear");
     printf("Gracias por usar el Sistema Bancario, tenga un buen d%ca.  \n\n", 161);
     printf("           .--._.--.  \n");
     printf("          ( O     O )  \n");
